@@ -1,0 +1,295 @@
+.container {
+    display: flex;
+}
+
+.subcontainer-left {
+    width: 40%; /* Each box takes up 50% of the container width */
+    padding: 20px; /* Optional: add padding for spacing */
+    margin-top: 24px;
+    box-sizing: border-box; /* Ensures padding doesn’t increase box size */
+    border: 1px solid #ddd; /* Optional: border for visibility */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(187, 238, 250, 0.25); 
+}
+
+.subcontainer-right{
+    width: 60%; /* Each box takes up 50% of the container width */
+    padding: 20px; /* Optional: add padding for spacing */
+    margin-top: 24px;
+    box-sizing: border-box; /* Ensures padding doesn’t increase box size */
+    border: 1px solid #ddd; /* Optional: border for visibility */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(187, 238, 250, 0.25); 
+}
+
+.menuBar {
+  background-color: #2C5784;
+  padding: 12px;
+  height: 112px;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 24px;
+}
+
+.left-content {
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+  padding: 12px;
+
+  width: 90%;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(187, 238, 250, 0.25); 
+  border-radius: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #1E3A5F;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+select {
+    display: block;
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.input-group-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    grid-template-rows: auto auto; /* Two rows: one for labels, one for inputs */
+    gap: 10px; /* Space between items */
+}
+
+
+.input-group-double label {
+    grid-row: 1; 
+}
+
+.input-group-double input {
+    width: 80%;
+    grid-row: 2; 
+}
+
+
+input-group-tripple {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Two equal-width columns */
+    grid-template-rows: auto auto auto; /* Two rows: one for labels, one for inputs */
+    gap: 10px; /* Space between items */
+}
+
+.input-group-tripple label {
+    grid-row: 1; 
+}
+
+.input-group-tripple input {
+    width: 80%;
+    grid-row: 2; 
+}
+
+.input-group-tripple span {
+    width: 80%;
+    grid-row: 2; 
+}
+
+
+.button-menubar{
+    width: 15%;
+    padding: 10px;
+    margin-left: 32px;
+    font-size: 16px;
+    text-align: center;
+    background-color: #2C5784;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.button{
+    width: 40%;
+    padding: 10px;
+    background-color: #4876a6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    transition-duration: 0.4s;
+}
+
+.button-menubar:hover {
+    background-color: #406fa0;
+}
+
+.button:hover {
+    background-color: #5382b4;
+}
+
+/* sat tracker */
+
+.button.toggle{
+    width: 120px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+}
+
+.collapsible-container {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 16px;
+}
+
+.collapsible-header {
+    background-color: #2C5784;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.collapsible-header:hover {
+    background-color: #406fa0;
+}
+
+.collapsible-header i {
+    transition: transform 0.3s ease;
+}
+
+.collapsible-header.active i {
+    transform: rotate(180deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background-color: #f9f9f9;
+    padding: 0 15px;
+}
+
+.collapsible-content.open {
+    padding: 10px 15px;
+}
+
+.button.toggle{
+    height: 40px;
+}
+
+
+.toggle-icon {
+    font-size: 20px;
+}
+
+.toggle-text {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+#descriptionOutput{
+    overflow-y: scroll; /* Vertikales Scrollen */
+    overflow-x: hidden; /* Horizontales Scrollen deaktiviert */
+}
+
+.collapsible.open {
+    max-height: 200px; /* Maximale Höhe, wenn geöffnet */
+    padding: 15px; /* Padding bei geöffnetem Zustand */
+  }
+
+/* Container for the scrollable table */
+.table-container {
+    width: 100%; /* Full width */
+    max-height: 300px; /* Restrict the height */
+    overflow: auto; /* Enable scrolling */
+    border: 1px solid #ccc; /* Optional: border around the table */
+    margin: 20px 0;
+}
+
+/* Basic table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead th {
+    position: sticky; /* Sticky header */
+    top: 0;
+    background-color: #f8f9fa; /* Background color for header */
+    border-bottom: 2px solid #ddd;
+    padding: 10px;
+}
+
+th {
+    border-bottom: solid black 1px;
+}
+
+th {
+    min-width: 40px;
+    padding: 10px;
+    text-align: left;
+}
+
+.headerLabel {
+    text-align: left;
+}
+
+table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+td {
+    padding: 10px;
+    min-height: 32px;
+    font-size: 14px;
+}
+/* Optional: Add hover effects */
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+    cursor: pointer;
+}
+ .selected {
+    background-color: #d0f0c0 !important; /* Light green */
+}
+
+.description-label {
+    font-size: 14px;                 /* Adjust size */
+    font-weight: 400;                /* Set normal weight */
+}
