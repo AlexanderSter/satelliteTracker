@@ -28,12 +28,31 @@
   height: 112px;
 }
 
-.title {
-  text-align: center;
-  color: white;
-  font-size: 24px;
-}
-
+.title{
+    color: white;
+    font-size: 24px;
+  }
+  
+  .link{
+      display: inline;
+      width: 15%;
+      padding: 15px 25px;
+      margin-left: 32px;
+      font-size: 16px;
+      text-align: center;
+      background-color: #2C5784;
+      text-decoration: none;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition-duration: 0.4s;
+  }
+  
+  .link:hover {
+      background-color: #406fa0;
+  }
+  
 .left-content {
 
   margin-left: auto;
@@ -81,6 +100,19 @@ select {
     grid-template-columns: 1fr 1fr; /* Two equal-width columns */
     grid-template-rows: auto auto; /* Two rows: one for labels, one for inputs */
     gap: 10px; /* Space between items */
+}
+
+.input-group-linkbudget {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Two equal-width columns */
+    grid-template-rows: auto auto auto auto auto; /* Two rows: one for labels, one for inputs */
+    gap: 10px; /* Space between items */
+}
+
+.div-border {
+    border: 2px solid black;
+    padding: 10px;
+    margin: 10px;
 }
 
 
@@ -205,6 +237,11 @@ input-group-tripple {
     padding: 10px 15px;
 }
 
+.collapsible.open {
+    max-height: 200px; /* Maximale Höhe, wenn geöffnet */
+    padding: 15px; /* Padding bei geöffnetem Zustand */
+  }
+  
 .button.toggle{
     height: 40px;
 }
@@ -223,11 +260,6 @@ input-group-tripple {
     overflow-y: scroll; /* Vertikales Scrollen */
     overflow-x: hidden; /* Horizontales Scrollen deaktiviert */
 }
-
-.collapsible.open {
-    max-height: 200px; /* Maximale Höhe, wenn geöffnet */
-    padding: 15px; /* Padding bei geöffnetem Zustand */
-  }
 
 /* Container for the scrollable table */
 .table-container {
@@ -292,4 +324,9 @@ tr:hover {
 .description-label {
     font-size: 14px;                 /* Adjust size */
     font-weight: 400;                /* Set normal weight */
+}
+
+.description-label-nodata {
+    color: rgb(160, 0, 0);
+    display:none;                
 }

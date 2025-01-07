@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\aster\OneDrive\Desktop\HSB\Aerospace Technologies M\SC\scripts\satelliteTracker\env"
+VIRTUAL_ENV="C:\Users\aster\OneDrive\Desktop\HSB\AT\SC\scripts\satelliteTracker\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

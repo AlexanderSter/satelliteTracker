@@ -1,0 +1,532 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+        <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.plot.ly/plotly-2.18.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    </head>
+    <body>
+        
+        <div class="menuBar">
+            <p class = 'title'> HSB - SCO - Satellite Tracker  <span class = 'title' style="font-size: 12px"> V 2.000 </span> </p>
+            
+            <a class="link" href="{{ url_for('start_pageSatelliteTracker') }}">Satellite Track</a>
+            <a class="link" href="{{ url_for('start_pageLinkBudget') }}">Link Budget</a>
+          </div>
+    
+        <div class="container" id="">
+            
+            <!-- Input -->
+            <div class="subcontainer-left">
+                <div class="input-group-double">
+                    <label>Frequency [Hz]:</label>
+                    <label>Bandwidth [Hz]: </label>
+                    <input type="number" id="frequencyLinkBudgetInput" value="145.950e6">
+                    <input type="number" id="bandwidthLinkBudgetInput" value="1e6">
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <label>EIRP [W]:</label>
+                    <label>Receiver Gain [dB]: </label>
+                    <input type="number" id="eirpLinkBudgetInput" value="2">
+                    <input type="number" id="receiverGainLinkBudgetInput" value="60">
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <label>Noise Figure [dB]:</label>
+                    <label>Antenna Gain Rx [dBi]: </label>
+                    <input type="number" id="noiseFigureLinkBudgetInput" value="2">
+                    <input type="number" id="antennaGainRxLinkBudgetInput" value="18">
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <label>Antenna Noise Temp [K]:</label>
+                    <label>Tx-Power [W]: </label>
+                    <input type="number" id="noiseTempAnLinkBudgetInput" value="1000">
+                    <input type="number" id="txPowerLinkBudgetInput" value="1">
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <label>Bitrate [bits/s]: </label>
+                    <label>Roll Off Factor:</label>
+                    <input type="number" id="bitrateLinkBudgetInput" value="1200">
+                    <input type="number" id="rollOffFactorLinkBudgetInput" value="0.3">
+                    
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <label>Distance [m]:</label>
+                    <label>Modulation Schemes [bits/symbol]:</label>
+                    <input type="number" id="distanceLinkBudgetInput" value="804437">
+                    <select id="bitsPerSymbolLinkBudgetInput">
+                        <option value="BPSK">BPSK</option>
+                        <option value="QPSK">QPSK</option>
+                    </select>
+                    
+                </div>
+                <br>
+                <div class="input-group-double">
+                    <button class="button" id="linkBudgetButton">Create Link Budget</button>
+                    <button class="button" id="createPdfButton">Create PDF</button>
+                </div>
+            </div>
+    
+            <!-- Output -->
+            <div class="subcontainer-right">
+               <!-- General -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>General</label>
+                        <label>Frequency</label>
+                        <label>f</label>
+                        <label id="frequencyLinkBudget"></label>
+                        <label></label>
+                    </div>
+                    
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Wave Length</label>
+                        <label>λ</label>
+                        <label id="wavelengthLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Bandwidth</label>
+                        <label>B</label>
+                        <label id="bandwidthLinkBudget"></label>
+                        <label id="bandwidthLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Boltzman Const</label>
+                        <label>k</label>
+                        <label> 1,38E-23 J/K </label>
+                        <label>  </label>
+                    </div>
+                </div>
+
+                <!-- Transmitter -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Transmitter</label>
+                        <label>Tx-Power</label>
+                        <label>Pt</label>
+                        <label id="txPowerLinkBudget"></label>
+                        <label id="txPowerLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Antenna Gain Tx</label>
+                        <label>Gt</label>
+                        <label id="antennaGainTxLinkBudget"></label>
+                        <label id="antennaGainTxLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>EIRP</label>
+                        <label>EIRP</label>
+                        <label id="eirpLinkBudget"></label>
+                        <label id="eirpLinkBudgetdB"></label>
+                    </div>
+                </div>
+
+                <!-- Path -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Path</label>
+                        <label>Distance</label>
+                        <label>r</label>
+                        <label id="distanceLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Path Loss</label>
+                        <label>Lp</label>
+                        <label id="pathlossLinkBudget"></label>
+                        <label id="pathlossLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Power Flux Density Ground</label>
+                        <label>S</label>
+                        <label id="powerFluxDensityLinkBudget"></label>
+                        <label></label>
+                    </div>
+                </div>
+
+                <!-- Receiver -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Receiver</label>
+                        <label>Antenna Diameter</label>
+                        <label>D</label>
+                        <label id="antennaDiameterLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Phys. Area</label>
+                        <label>Aphy</label>
+                        <label id="antennaAreaLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Antenna Efficiency</label>
+                        <label>ηant</label>
+                        <label id="antennaEfficiencyLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Effective Antenna Area</label>
+                        <label>Aeff</label>
+                        <label id="antennaEffectiveAreaLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Antenna Gain Rx</label>
+                        <label>Gr</label>
+                        <label id="antennaGainRxLinkBudget"></label>
+                        <label id="antennaGainRxLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>G over T</label>
+                        <label>Pr=Si</label>
+                        <label id="signalInLinkBudget"></label>
+                        <label id="signalInLinkBudgetdB"></label>
+                    </div>
+                    
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Receiver Gain</label>
+                        <label>G</label>
+                        <label id="receiverGainLinkBudget"></label>
+                        <label id="receiverGainLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Output Signal</label>
+                        <label>So</label>
+                        <label id="signalOutLinkBudget"></label>
+                        <label id="signalOutLinkBudgetdB"></label>
+                    </div>
+                </div>
+
+                <!-- Noise -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Noise</label>
+                        <label>Antenna Noise Temp</label>
+                        <label>Ta</label>
+                        <label id="noiseTempAnLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Noise In</label>
+                        <label>Ni</label>
+                        <label id="noiseInLinkBudget"></label>
+                        <label id="noiseInLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>SNR In</label>
+                        <label>SNRi</label>
+                        <label id="snrInLinkBudget"></label>
+                        <label id="snrInLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Noise Figure</label>
+                        <label>F</label>
+                        <label id="noiseFigureLinkBudget"></label>
+                        <label id="noiseFigureLinkBudgetdB"></label>
+                    </div>
+                    
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Equiv. Noise Temperature</label>
+                        <label>Te</label>
+                        <label id="noiseTempEqLinkBudget"></label>
+                        <label></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Noise Out</label>
+                        <label>No</label>
+                        <label id="noiseOutLinkBudget"></label>
+                        <label id="noiseOutLinkBudgetdB"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>SNR Out</label>
+                        <label>SNRo</label>
+                        <label id="snrOutLinkBudget"></label>
+                        <label id="snrOutLinkBudgetdB"></label>
+                    </div>
+
+                </div>
+
+                <!-- Compact Calculation -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Compact Calculation</label>
+                        <label>EIRP</label>
+                        <label></label>
+                        <label></label>
+                        <label id="eirpCompactCalculation"></label>
+                    </div>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Path Loss</label>
+                        <label></label>
+                        <label></label>
+                        <label id="pathlossCompactCalculation"></label>
+                    </div>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>k</label>
+                        <label></label>
+                        <label></label>
+                        <label>- (-)228.6 J/KdB</label>
+                    </div>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Bandwidth</label>
+                        <label></label>
+                        <label></label>
+                        <label id="bandwidthCompactCalculation"></label>
+                    </div>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>G over T</label>
+                        <label></label>
+                        <label></label>
+                        <label id="govertCompactCalculation"></label>
+                    </div>
+                    <hr>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>SNR Out</label>
+                        <label></label>
+                        <label></label>
+                        <label id="snrOutCompactCalculation"></label>
+                    </div>
+                </div>
+                
+                <!-- Digital Modulation -->
+                <div class="div-border">
+                    <div class="input-group-linkBudget">
+                        <label>Digital Modulation</label>
+                        <label>Bits per Symbol</label>
+                        <label>m</label>
+                        <label id="bitsPerSymbolLinkBudget"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Bitrate</label>
+                        <label>Rb</label>
+                        <label id="bitrateLinkBudget"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Symbol Rate</label>
+                        <label>Rs</label>
+                        <label id="symbolRateLinkBudget"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Roll-Off Factor</label>
+                        <label>ɑ</label>
+                        <label id="rollOffFactorLinkBudget"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Required Bandwidth</label>
+                        <label>Breq</label>
+                        <label id="requiredBandwidthLinkBudget"></label>
+                    </div>
+
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Energy per bit / Noise Dens</label>
+                        <label>Eb/No</label>
+                        <label id="energyPerBitLinkBudget"></label>
+                        <label id="energyPerBitLinkBudgetdB"></label>
+                    </div>
+                    <div class="input-group-linkBudget">
+                        <label></label>
+                        <label>Bit Error Ratio</label>
+                        <label>BER</label>
+                        <label id="bitErrorRatioLinkBudget"></label>
+                        <label></label>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        
+        <script>
+            
+            document.getElementById('linkBudgetButton').addEventListener('click', async function() {
+
+                let modulationScheme = document.getElementById("bitsPerSymbolLinkBudgetInput").value
+                if (modulationScheme == 'BPSK'){
+                    var bitsPerSymbol = 1
+                } 
+                else if (modulationScheme == 'QPSK'){
+                    var bitsPerSymbol = 2
+                }
+
+                data = {
+                    'frequency' : parseFloat(document.getElementById("frequencyLinkBudgetInput").value),
+                    'bandwidth' : parseFloat(document.getElementById("bandwidthLinkBudgetInput").value),
+                    'eirp' : parseFloat(document.getElementById("eirpLinkBudgetInput").value),
+                    'distance' : parseFloat(document.getElementById("distanceLinkBudgetInput").value),
+                    'antennaGainRx' : parseFloat(document.getElementById("antennaGainRxLinkBudgetInput").value),
+                    'receiverGain' : parseFloat(document.getElementById("receiverGainLinkBudgetInput").value),
+                    'bitrate' : parseFloat(document.getElementById("bitrateLinkBudgetInput").value),
+                    'bitsPerSymbol' : bitsPerSymbol,
+                    'rollOffFactor' : parseFloat(document.getElementById("rollOffFactorLinkBudgetInput").value),
+                    'noiseFigure' : parseFloat(document.getElementById("noiseFigureLinkBudgetInput").value),
+                    'txPower' : parseFloat(document.getElementById("txPowerLinkBudgetInput").value),
+                    'noiseTempAn' : parseFloat(document.getElementById("noiseTempAnLinkBudgetInput").value),
+                    }
+
+
+                const response = await fetch('/getLinkBudget', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+
+                for (key in Object.keys(result)){
+                    if( Object.keys(result)[key]!= 'govert'){
+                        let value = result[Object.keys(result)[key]]['value']
+                        let valuedB = result[Object.keys(result)[key]]['dB']
+                        let unit = result[Object.keys(result)[key]]['unit'][0]
+                        let unitdB = result[Object.keys(result)[key]]['unit'][1]
+                        if (value != '' ){
+                            if (Math.abs(value) >= 1e6 || Math.abs(value) < 1e-3) {
+                                document.getElementById(`${Object.keys(result)[key]}LinkBudget`).innerHTML = `${value.toExponential(3)} ${unit}`
+                            }
+                            else {
+                                if (value % 1 === 0) {
+                                    document.getElementById(`${Object.keys(result)[key]}LinkBudget`).innerHTML = `${Math.trunc(value)} ${unit}`
+                                }
+                                else {
+                                    document.getElementById(`${Object.keys(result)[key]}LinkBudget`).innerHTML = `${value.toFixed(3)} ${unit}`
+                                }
+                            } 
+                        }else {
+                            document.getElementById(`${Object.keys(result)[key]}LinkBudget`).innerHTML = '-'
+                        }
+
+                        if (valuedB != '' ){
+                            if (valuedB % 1 === 0) {
+                                document.getElementById(`${Object.keys(result)[key]}LinkBudgetdB`).innerHTML = `${Math.trunc(valuedB)} ${unitdB}`
+                            } else {
+                                document.getElementById(`${Object.keys(result)[key]}LinkBudgetdB`).innerHTML = `${valuedB.toFixed(3)} ${unitdB}`
+                            }
+                        }
+                    }
+                }
+
+                document.getElementById("eirpCompactCalculation").innerHTML = `${result['eirp']['dB'].toFixed(3)} ${result['eirp']['unit'][1]}`
+                document.getElementById("pathlossCompactCalculation").innerHTML = `- ${result['pathloss']['dB'].toFixed(3)} ${result['pathloss']['unit'][1]}`
+                document.getElementById("bandwidthCompactCalculation").innerHTML = `- ${result['bandwidth']['dB'].toFixed(3)} ${result['bandwidth']['unit'][1]}`
+                document.getElementById("govertCompactCalculation").innerHTML = `+ ${result['govert']['dB'].toFixed(3)} ${result['govert']['unit'][1]}`
+                document.getElementById("snrOutCompactCalculation").innerHTML = `= ${result['snrOut']['dB'].toFixed(3)} ${result['snrOut']['unit'][1]}`
+            })
+            
+            document.getElementById('createPdfButton').addEventListener('click', function() {
+
+                // Initialize jsPDF
+                var doc = new jspdf.jsPDF()
+
+                // Add Title
+                doc.setFontSize(16);
+                doc.text("Link Budget Table", 105, 10, { align: "center" });
+                // Table data
+                const tableData = [
+                    ["", "", "", "", ""],
+                    ["General", "Frequency", "f", document.getElementById("frequencyLinkBudget").innerHTML, ""],
+                    ["", "Wave Length", "lambda", document.getElementById("wavelengthLinkBudget").innerHTML, ""],
+                    ["", "Bandwidth", "B", document.getElementById("bandwidthLinkBudget").innerHTML, ""],
+                    ["", "Boltzman Const", "k", "1,38E-23 J/K", ""],
+                    ["Transmitter", "Tx-Power", "Pt", document.getElementById("txPowerLinkBudget").innerHTML, ""],
+                    ["", "Antenna Gain Tx", "Gt", document.getElementById("antennaGainTxLinkBudget").innerHTML, document.getElementById("antennaGainTxLinkBudgetdB").innerHTML],
+                    ["", "EIRP", "EIRP", document.getElementById("eirpLinkBudget").innerHTML, document.getElementById("eirpLinkBudgetdB").innerHTML],
+                    ["Path", "Distance", "r", document.getElementById("distanceLinkBudget").innerHTML, ""],
+                    ["", "Path Loss", "Lp", document.getElementById("pathlossLinkBudget").innerHTML, document.getElementById("pathlossLinkBudgetdB").innerHTML],
+                    ["", "Power Flux Density Ground", "S", document.getElementById("powerFluxDensityLinkBudget").innerHTML, ""],
+                    ["Receiver", "Antenna Diameter", "D", document.getElementById("antennaDiameterLinkBudget").innerHTML, ""],
+                    ["", "Phys. Area", "Aphy", document.getElementById("antennaAreaLinkBudget").innerHTML, ""],
+                    ["", "Antenna Efficiency", "eta_ant", document.getElementById("antennaEfficiencyLinkBudget").innerHTML, ""],
+                    ["", "Effective Antenna Area", "Aeff", document.getElementById("antennaEffectiveAreaLinkBudget").innerHTML, ""],
+                    ["", "Antenna Gain Rx", "Gr", document.getElementById("antennaGainRxLinkBudget").innerHTML, document.getElementById("antennaGainRxLinkBudgetdB").innerHTML],
+                    ["", "G over T", "Pr=Si", document.getElementById("signalInLinkBudget").innerHTML, document.getElementById("signalInLinkBudgetdB").innerHTML],
+                    ["Noise", "Antenna Noise Temp", "Ta", document.getElementById("noiseTempAnLinkBudget").innerHTML, ""],
+                    ["", "Noise In", "Ni", document.getElementById("noiseInLinkBudget").innerHTML, document.getElementById("noiseInLinkBudgetdB").innerHTML],
+                    ["", "SNR In", "SNRi", document.getElementById("snrInLinkBudget").innerHTML, document.getElementById("snrInLinkBudgetdB").innerHTML],
+                    ["", "Noise Figure", "F", document.getElementById("noiseFigureLinkBudget").innerHTML, document.getElementById("noiseFigureLinkBudgetdB").innerHTML],
+                    ["", "Equiv. Noise Temperature", "Te", document.getElementById("noiseTempEqLinkBudget").innerHTML, ""],
+                    ["", "Noise Out", "No", document.getElementById("noiseOutLinkBudget").innerHTML, document.getElementById("noiseOutLinkBudgetdB").innerHTML],
+                    ["", "SNR Out", "SNRo", document.getElementById("snrOutLinkBudget").innerHTML, document.getElementById("snrOutLinkBudgetdB").innerHTML],
+                    ["Digital Modulation", "Bits per Symbol", "m", document.getElementById("bitsPerSymbolLinkBudget").innerHTML, ""],
+                    ["", "Bitrate", "Rb", document.getElementById("bitrateLinkBudget").innerHTML, ""],
+                    ["", "Symbol Rate", "Rs", document.getElementById("symbolRateLinkBudget").innerHTML, ""],
+                    ["", "Roll-Off Factor", "alpha", document.getElementById("rollOffFactorLinkBudget").innerHTML, ""],
+                    ["", "Required Bandwidth", "Breq", document.getElementById("requiredBandwidthLinkBudget").innerHTML, ""],
+                    ["", "Energy per Bit / Noise Dens", "Eb/No", document.getElementById("energyPerBitLinkBudget").innerHTML, ""],
+                    ["", "Bit Error Ratio", "BER", document.getElementById("bitErrorRatioLinkBudget").innerHTML, ""],
+                ];
+
+                // Add Table
+                doc.autoTable({
+                    head: [["Category", "Parameter", "Symbol", "Value", ""]],
+                    body: tableData, // Skip the first row (headers)
+                });
+
+                // Save PDF
+                doc.save("LinkBudget.pdf");
+
+            })
+        </script>
+    </body>
+</html>

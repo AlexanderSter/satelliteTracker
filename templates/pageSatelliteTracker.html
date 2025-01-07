@@ -1,0 +1,541 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+        <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.plot.ly/plotly-2.18.2.min.js"></script>
+    </head>
+    <body>
+        
+        <div class="menuBar">
+            <p class = 'title'> HSB - SCO - Satellite Tracker  <span class = 'title' style="font-size: 12px"> V 2.000 </span> </p>
+            
+            <a class="link" href="{{ url_for('start_pageSatelliteTracker') }}">Satellite Track</a>
+            <a class="link" href="{{ url_for('start_pageLinkBudget') }}">Link Budget</a>
+          </div>
+    
+        <div class="container" id="">
+            <div class="subcontainer-left">
+
+                <!-- Select Satellite  -->
+                <div class="collapsible-container">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>Select Satellite</Param></span>
+                    </div>
+                    <div class="collapsible-content">
+
+                        <!-- Sat Selection dropdown  -->
+                        <div class="input-group-double">
+                            <label for="">Please select group:</label>
+                            <label for="">Please select satellite:</label>
+                            <select id="dropdownSelectGroup" onchange="dropdownSelectGroup()">
+                                <option> </option>
+                                <option> cubesat </option>
+                                <option> stations </option>
+                            </select>
+                            <select id="dropdownSelectSat" onchange="getDescription()"></select>
+                            
+                            
+                        </div>
+                        <br>
+                        <label id="satellite-count">Number of currently available satellites: </label>
+                        <br>
+
+                        <!-- Location Selection dropdown  -->
+                        <div class="input-group-double">
+                            <label for="location">location:</label>
+                            <label for="empty">  </label>
+                            <select id="locationDropdown" onchange="dropdownSelectLocation()">
+                                <option value = ''>  </option>
+                                <option value = 'Bremen'> Bremen </option>
+                            </select>
+                        </div> 
+                        <br>
+                        <div class="input-group-double">
+                            <label for="latitude">latitude:</label>
+                            <label for="longitude"> longitude: </label>
+                            <input type="number" id="latitude" name="latitude">
+                            <input type="number" id="longitude" name="longitude">
+                        </div> 
+                        <br>
+                        <div class="input-group-double">
+                            <label for="">start:</label>
+                            <label for="">end:</label>
+                            <input type="datetime-local" id="startTime" name="">
+                            <input type="datetime-local" id="stopTime" name="">
+                        </div> 
+                        <br>
+                        <div class="input-group-double">
+                            <label for="">elevation:</label>
+                            <label for=""></label>
+                            <input type="number" id="elevation" name="elevation" value="10">
+                            <label for=""></label>
+                        </div>
+                        <br>  
+                        <div class="input-group">
+                            <button class="button" id="dataTableButton">Create data table</button>
+                        </div>     
+                    </div>
+                </div>
+                
+                <!-- Data Table  -->
+                <div class="collapsible-container" id="collapsible open">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>Data Table</Param></span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="table-container">
+                            <table id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class = 'headerLabel'>from</th>
+                                        <th class = 'headerLabel'>latitude</th>
+                                        <th class = 'headerLabel'>longitude</th>
+                                        <th class = 'headerLabel'>to</th>
+                                        <th class = 'headerLabel'>latitude</th>
+                                        <th class = 'headerLabel'>longitude</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    
+                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description  -->
+                <div class="collapsible-container" id="collapsible open">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>Description</Param></span>
+                    </div>
+                    <div class="collapsible-content">
+                        
+                        <label class="description-label-nodata" id="nodataDesc"> No Data Found</label>
+                        <br>
+                        <div class="input-group" id='descriptionOutput'>
+                            
+                            <div class="input-group">
+                                <label for="">intern. Designator Id: </label>
+                                <br>
+                                <label class="description-label" id="intDesIDDesc"></label>
+                            </div>
+                            <br>
+                            <div class="input-group-double">
+                                <div class="input-group-double">
+                                    <label for="">inclination: </label>
+                                    <label class="description-label" id="inclinationDesc"></label>
+                                </div>
+
+                                <div class="input-group-double">
+                                    <label for="">right ascension of ascending node (degrees): </label>
+                                    <label class="description-label" id="raanDesc"></label>
+                                </div>
+                            </div>
+
+                            <div class="input-group-double">
+                                <div class="input-group-double">
+                                    <label for="">eccentricity: </label>
+                                    <label class="description-label" id="eccDesc"></label>
+                                </div>
+
+                                <div class="input-group-double">
+                                    <label for="">argument of perigee (degrees): </label>
+                                    <label class="description-label" id="aopDesc"></label>
+                                </div>
+                            </div>
+
+                            <div class="input-group-double">
+                                <div class="input-group-double">
+                                    <label for="">mean anomaly (degrees): </label>
+                                    <label class="description-label" id="meananoDesc"></label>
+                                </div>
+
+                                <div class="input-group-double">
+                                    <label for="">mean motion (degrees/minute): </label>
+                                    <label class="description-label" id="meanmotDesc"></label>
+                                </div>
+                            </div>
+
+                            <div class="input-group-double">
+                                <div class="input-group-double">
+                                    <label for="">launch site: </label>
+                                    <label class="description-label" id="launch_siteDesc"></label>
+                                </div>
+
+                                <div class="input-group-double">
+                                    <label for="">launch date: </label>
+                                    <label class="description-label" id="launch_dateDesc"></label>
+                                </div>
+                            </div>
+
+                            <div class="input-group-double">
+                                <div class="input-group-double">
+                                    <label for="">Funding Agency: </label>
+                                    <label class="description-label" id="agencyDesc"></label>
+                                </div>
+                                <div class="input-group-double">
+                                    <label for="">Launch Vehicle: </label>
+                                    <label class="description-label" id="launch_vehicleDesc"></label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="">discipline: </label>
+                                <br>
+                                <label class="description-label" id="disciplineDesc"></label>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <label for="">info: </label>
+                                <br>
+                                <label class="description-label" id="descriptionDesc"></label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <label for="">source: </label>
+                            <br>
+                            <label class="description-label" id="sourceDesc"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="subcontainer-right">
+                
+                <div class="collapsible-container">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>Plot</Param></span>
+                    </div>
+                    <div class="collapsible-content" id="plotOutput">
+
+                        <div class="input-group">
+                            <label for="">Groundtrack</label>
+                            <div id="plotGroundtrack" style="margin-top: 20px;"></div>
+                            <br>
+                            <label for="">Altitude & Azimuth</label>
+                            <div id="plotAltAzi" style="margin-top: 20px;"></div>
+                            <br>
+                            <label for="">Polar</label>
+                            <div id="plotPolar" style="margin-top: 20px;"></div>
+                            <br>
+                            <label for="">Doppler shift</label>
+                            <div id="plotDistance" style="margin-top: 20px;"></div>
+                        </div> 
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <script>
+            
+            function formatDateTime(date) {
+                const pad = (n) => String(n).padStart(2, '0'); // Zero-padding function
+                const year = date.getFullYear();
+                const month = pad(date.getMonth() + 1); // Months are zero-based
+                const day = pad(date.getDate());
+                const hours = pad(date.getHours());
+                const minutes = pad(date.getMinutes());
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            // Configure -> default date and time values
+            const currentDateTime = new Date();
+            document.getElementById('startTime').value = formatDateTime(currentDateTime);
+
+            const tomorrowDateTime = new Date(currentDateTime);
+            tomorrowDateTime.setDate(tomorrowDateTime.getDate() + 1);
+            document.getElementById('stopTime').value = formatDateTime(tomorrowDateTime);
+
+            // Configure -> default  location values
+            document.getElementById('locationDropdown').value = 'Bremen';
+            dropdownSelectLocation()
+
+            async function dropdownSelectGroup(){
+                let inputValue = document.getElementById("dropdownSelectGroup").value;
+
+                const response = await fetch('/getSatData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ value: inputValue }) // send as a string
+                });
+
+                let satellites = await response.json();
+                const dropdown = document.getElementById("dropdownSelectSat");
+                dropdown.options.length = 0;
+                for (const key in satellites) {
+                    const option = document.createElement("option");
+                    option.value = key;        
+                    option.textContent = `#${satellites[key]['id']} - ${satellites[key]['name']}`;
+                    dropdown.appendChild(option);
+                }
+
+                // add satellite count
+                let availableSatellites = Object.keys(satellites).length;  // Example value (you can get this dynamically)
+                document.getElementById('satellite-count').innerHTML = "Number of currently available satellites: " + availableSatellites;
+            }
+            
+            function dropdownSelectLocation(){
+
+                let locationValue = document.getElementById("locationDropdown").value;
+
+                let latitudeDOM = document.getElementById("latitude")
+                let longitudeDOM = document.getElementById("longitude")
+
+                if (locationValue == 'Bremen'){
+                    latitudeDOM.value = '53.0793'
+                    longitudeDOM.value = '8.8017' 
+
+                } else {
+                    latitudeDOM.value = ''
+                    longitudeDOM.value = ''
+                }
+            }
+
+            function toggleButton(button) {
+                button.classList.toggle('active');
+                const text = button.querySelector('.toggle-text');
+                text.textContent = button.classList.contains('active') ? 'Timeframe' : 'Point in time';
+                
+                const inputField = document.getElementById("stopTime");
+                inputField.disabled = !inputField.disabled; // Zustand umkehren
+            }         
+
+            function toggleCollapsible(header) {
+                const content = header.nextElementSibling; // Get the content div
+                const icon = header.querySelector('i'); // Get the icon
+
+                content.classList.toggle('open');
+                header.classList.toggle('active');
+
+                if (content.classList.contains('open')) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    content.style.maxHeight = "0";
+                }
+            }
+            
+            async function getDescription(){
+                
+                let key = parseFloat(document.getElementById("dropdownSelectSat").value);
+
+                data = {
+                    'key' : key,
+                    }
+                
+                const response = await fetch('/getDescription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (Object.keys(result).length > 1){
+                    
+                    document.getElementById("nodataDesc").style.display = 'none'
+                    document.getElementById("descriptionOutput").style.display = 'block'
+
+                    for (key in Object.keys(result)){
+                        document.getElementById(`${Object.keys(result)[key]}Desc`).innerHTML = result[Object.keys(result)[key]] 
+                    }
+                } 
+                else {
+                    document.getElementById("descriptionOutput").style.display = 'none'
+                    document.getElementById("nodataDesc").style.display = 'block'
+                    document.getElementById("sourceDesc").innerHTML = result['source']
+                }
+            }
+            
+            function clearTable(tableId) {
+                const table = document.getElementById(tableId);
+
+                if (table && table.rows.length > 1) {
+                    while (table.rows.length > 1) {
+                        table.deleteRow(1);
+                    }
+                }
+            }
+
+            let currentKey = 0;
+
+            document.getElementById('dataTableButton').addEventListener('click', async function() {
+                
+                let key = parseFloat(document.getElementById("dropdownSelectSat").value);
+
+                function dateToArray(datetime){
+                    return [
+                        datetime.getFullYear(),     
+                        datetime.getMonth() + 1,   
+                        datetime.getDate(),        
+                        datetime.getHours(),       
+                        datetime.getMinutes()            
+                    ];
+                }
+                
+                document.getElementById("plotGroundtrack").innerHTML = ''
+                document.getElementById("plotAltAzi").innerHTML = ''
+                document.getElementById("plotPolar").innerHTML = ''
+                document.getElementById("plotDistance").innerHTML = ''
+                
+                let startTime = document.getElementById("startTime").value;
+                let stopTime = document.getElementById("stopTime").value;
+                let time = [dateToArray(new Date(startTime)), dateToArray(new Date(stopTime))]
+                
+                const locationDropdown = document.getElementById('locationDropdown');
+                let locName = locationDropdown.options[locationDropdown.selectedIndex].text;
+                let latitude = parseFloat(document.getElementById("latitude").value);
+                let longitude = parseFloat(document.getElementById("longitude").value);
+
+                let location = [locName, latitude, longitude]
+                
+                let elevation = parseFloat(document.getElementById("elevation").value);
+
+                data = {
+                    'key' : key,
+                    'location' : location,
+                    'time' : time,
+                    'elevation' : elevation,
+                    }
+
+
+                const response = await fetch('/getTrackData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if(!('error' in Object.keys(result))){
+                    addRowDataTable(result['elevation'])
+                }else{
+                    alert(result['error']);
+                }
+                
+
+            });
+            
+            function addRowDataTable(trackData){
+
+                let table = document.getElementById("dataTable");
+                clearTable("dataTable")
+
+                rows = []
+                for (i=0; i < Object.keys(trackData).length; i++){
+                    let row = table.insertRow(i+1);
+                    rows.push(row); 
+
+                    let cell1 = row.insertCell(0);
+                    cell1.innerHTML = i + 1;
+                    
+                    let cell2 = row.insertCell(1);
+                    cell2.innerHTML = trackData[i]['timeline'][0].replace('T', ' ');
+
+                    let cell3 = row.insertCell(2);
+                    cell3.innerHTML = trackData[i]['lat'][0].toFixed(2);
+
+                    let cell4 = row.insertCell(3);
+                    cell4.innerHTML = trackData[i]['lon'][0].toFixed(2);
+
+                    let cell5 = row.insertCell(4);
+                    cell5.innerHTML = trackData[i]['timeline'][trackData[i]['timeline'].length -1].replace('T', ' ');
+
+                    let cell6 = row.insertCell(5);
+                    cell6.innerHTML = trackData[i]['lat'][trackData[i]['lat'].length -1].toFixed(2);
+
+                    let cell7 = row.insertCell(6);
+                    cell7.innerHTML = trackData[i]['lon'][trackData[i]['lon'].length -1].toFixed(2);
+
+                    
+                    row.addEventListener('click', function () {
+                        // Remove 'selected' class from any previously selected row
+                        Array.from(rows).forEach(row => row.classList.remove('selected'));
+
+                        // Add 'selected' class to the clicked row
+                        this.classList.add('selected');
+
+                        // Log the clicked row's content
+                        const rowData = Array.from(this.cells).map(cell => cell.textContent);
+                        getPlots((parseFloat(rowData[0]) - 1).toString())
+
+                    });
+                }
+            }
+
+            async function getPlots(key){
+
+                fetch('/get_plotGroundTrack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: key
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Plotly.newPlot('plotGroundtrack', data.data, data.layout);
+                })
+                .catch(error => {
+                    console.error('Error fetching plotGroundtrack data:', error);
+                });
+
+                fetch('/get_plotPolar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: key
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Plotly.newPlot('plotPolar', data.data, data.layout);
+                })
+                .catch(error => {
+                    console.error('Error fetching plotPolar data:', error);
+                });
+
+                fetch('/get_plotAltAzi', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: key
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Plotly.newPlot('plotAltAzi', data.data, data.layout);
+                })
+                .catch(error => {
+                    console.error('Error fetching plotAltAzi data:', error);
+                });
+
+                fetch('/get_plotDistance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: key
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Plotly.newPlot('plotDistance', data.data, data.layout);
+                })
+                .catch(error => {
+                    console.error('Error fetching plotDistance data:', error);
+                });
+
+            }
+        
+        </script>
+    </body>
+</html>

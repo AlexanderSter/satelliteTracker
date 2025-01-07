@@ -1,5 +1,5 @@
 import webbrowser
-import skyfield_library as sfl
+import sc_pyLibrary as sc_lib
 from flask import Flask, render_template, request, jsonify
 from skyfield.api import load
 import numpy as np
@@ -13,16 +13,21 @@ location = None
 app = Flask(__name__)
 
 
-@app.route("/", methods=('GET', 'POST'))
-def start_page():
+@app.route("/pageSatelliteTracker", methods=('GET', 'POST'))
+def start_pageSatelliteTracker():
     
-    return render_template('index.html')
+    return render_template('pageSatelliteTracker.html')
+
+@app.route("/pageLinkBudget", methods=('GET', 'POST'))
+def start_pageLinkBudget():
+    
+    return render_template('pageLinkBudget.html')
 
 @app.route('/getSatData', methods=('GET', 'POST'))
 def getSatData():
     global satellites
     data = request.get_json()
-    satellites = sfl.importSatellitesFromCelestrak(str(data['value']))
+    satellites = sc_lib.importSatellitesFromCelestrak(str(data['value']))
     
     return satellites
 
@@ -30,17 +35,16 @@ def getSatData():
 def getDescription():
     global satellites
     data = request.get_json()
-
+    satelliteObject = satellites[data['key']]['object']
+    
     try:
         # Versuche, den Wert in Integer zu konvertieren
-        key = int(data['value'])
-        satDescription = sfl.importSatDataFromn2yo(satellites[key]['id'])
+        satDescription = sc_lib.importDescription(satelliteObject)
 
 
     except ValueError:
         return jsonify({'error': 'Invalid value. Please send a number.'}), 400
 
-    # Ergebnis zurückgeben
     return jsonify(satDescription)
 
 @app.route('/getTrackData', methods=['GET', 'POST'])
@@ -51,14 +55,13 @@ def getTrackData():
     global location
 
     data = request.get_json()
-
     satelliteObject = satellites[data['key']]['object']
     location = data['location']
     time = data['time']
     elevation = data['elevation']
 
-    trackData = sfl.getTrackData(satelliteObject, location, time, elevation)
-    trackDataElevetion = sfl.getTrackData_Elev(trackData, elevation)
+    trackData = sc_lib.getTrackData(satelliteObject, location, time, elevation)
+    trackDataElevetion = sc_lib.getTrackData_Elev(trackData, elevation)
 
     result = {'origin': trackData, 'elevation': trackDataElevetion}
 
@@ -73,7 +76,7 @@ def createPlotGroundTrack():
 
     key = request.get_data()
     
-    fig = sfl.createPlotGroundTrack(trackData[int(key)], trackDataElevetion[int(key)], location)
+    fig = sc_lib.createPlotGroundTrack(trackData[int(key)], trackDataElevetion[int(key)], location)
 
     return jsonify(fig.to_dict())
 
@@ -84,7 +87,7 @@ def createPlotPolar():
 
     key = request.get_data()
     
-    fig = sfl.createPlotPolar(trackDataElevetion[int(key)])
+    fig = sc_lib.createPlotPolar(trackDataElevetion[int(key)])
 
     return jsonify(fig.to_dict())
 
@@ -95,7 +98,7 @@ def createPlotAltAzi():
 
     key = request.get_data()
     
-    fig = sfl.createPlotAltAzi(trackDataElevetion[int(key)])
+    fig = sc_lib.createPlotAltAzi(trackDataElevetion[int(key)])
 
     return jsonify(fig.to_dict())
 
@@ -107,11 +110,16 @@ def createPlotDistance():
     key = request.get_data()
     
 
-    fig = sfl.createPlotDistance(trackDataElevetion[int(key)])
+    fig = sc_lib.createPlotDistance(trackDataElevetion[int(key)])
 
     return jsonify(fig.to_dict())
 
+@app.route('/getLinkBudget', methods=['GET', 'POST'])
+def getlinkBudget():
+    data = request.get_json()
+    linkBudgetData = sc_lib.getLinkBudget(data['bandwidth'], data['eirp'], data['distance'], data['frequency'], data['antennaGainRx'], data['receiverGain'], data['bitrate'], data['bitsPerSymbol'], data['rollOffFactor'], data['noiseFigure'], data['txPower'], data['noiseTempAn'])
+    return jsonify(linkBudgetData)
 
 if __name__ == "__main__":
-    webbrowser.open("http://127.0.0.1:5000")
-    app.run(debug=True, use_reloader=False)
+    webbrowser.open("http://127.0.0.1:5000/pageSatelliteTracker")
+    app.run(debug=False, use_reloader=False)
