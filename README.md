@@ -8,7 +8,7 @@ V 1.000: Initial
 
 For use, only satelliteTrackerApp.exe file is needed.
 
-See HSB_SC_SatelliteTrackerApp_Documentation (still in work) for instructions
+See HSB_SC_SatelliteTrackerApp_Documentation for instructions
 
 
 # main file structure
